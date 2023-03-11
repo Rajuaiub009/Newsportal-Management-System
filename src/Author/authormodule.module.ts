@@ -6,6 +6,8 @@ import { AuthorEntity } from "./authorentity.entity"
 import { NewsService } from 'src/News/newsservice.service';
 import { NewsEntity } from "src/News/newsentity.entity";
 import { MailerModule } from "@nestjs-modules/mailer";
+import { EditorService } from 'src/Editor/editorservice.service';
+import { EditorEntity } from 'src/Editor/editorentity.entity';
 
 @Module({
 
@@ -24,10 +26,9 @@ imports: [
       }),
 
       
-      TypeOrmModule.forFeature([AuthorEntity,NewsEntity])],
+      TypeOrmModule.forFeature([AuthorEntity,NewsEntity,EditorEntity])],
 controllers: [AuthorController],
-providers: [AuthorService,NewsService],
-
+providers: [AuthorService,NewsService,EditorService],
 
 
 })

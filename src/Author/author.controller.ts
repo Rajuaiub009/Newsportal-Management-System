@@ -2,16 +2,20 @@ import {Body,Controller,Get,Post,Put,Delete,Param,ParseIntPipe,UsePipes,Query,Va
   import { CreateAuthor } from './author.dto';
   import { AuthorService } from './authorsevice.service';
   import { NewsService } from '../News/newsservice.service';
+  import { CreateEditor } from 'src/Editor/editor.dto';
+  import { EditorService } from 'src/Editor/editorservice.service';
   import { diskStorage } from 'multer';
   import { FileInterceptor } from '@nestjs/platform-express';
   import { UnauthorizedException } from '@nestjs/common/exceptions';
   import { SessionGuard } from './session.guard';
 import { CreateNews } from '../News/news.dto';
 
+
   @Controller('/author')
   export class AuthorController {
     constructor(private authorService: AuthorService,
-      private newsService: NewsService
+      private newsService: NewsService,
+      private editorService: EditorService 
     )
     {}
   
@@ -43,8 +47,8 @@ import { CreateNews } from '../News/news.dto';
    
   }
 
-  @Post('/signup')
-@UseInterceptors(FileInterceptor('myfile',
+@Post('/signup')
+@UseInterceptors(FileInterceptor('filename',
 {storage:diskStorage({
   destination: './uploads',
   filename: function (req, file, cb) {
@@ -55,7 +59,7 @@ import { CreateNews } from '../News/news.dto';
 }))
 signup(@Body() mydto:CreateAuthor,@UploadedFile(new ParseFilePipe({
   validators: [
-    new MaxFileSizeValidator({ maxSize: 16000 }),
+    new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 2 }),
     new FileTypeValidator({ fileType: 'png|jpg|jpeg|' }),
   ],
 }),) file: Express.Multer.File){
@@ -68,7 +72,7 @@ console.log(file)
 }
 
 @Get('/signin')
-signin(@Session() session, @Body() mydto:CreateAuthor)
+async signin(@Session() session, @Body() mydto:CreateAuthor)
 {
 if(this.authorService.signin(mydto))
 {
@@ -132,12 +136,26 @@ getNewsByIDName(@Query() qry: any): any {
     return this.newsService.deleteNewsbyid(id);
   }
 
+  @Post('/inserteditor')
+  @UsePipes(new ValidationPipe())
+    insertManager(@Body() editordto: CreateEditor): any {
+      return this.editorService.insertEditor(editordto);
+    }
+
+    @Get('/findeditor/:id')
+    getEditorByID(@Param('id', ParseIntPipe) id: number): any {
+      return this.editorService.getEditorByID(id);
+    }
+
+   @Get('/findeditor')
+   getEditorByIDName(@Query() qry: any): any {
+   return this.editorService.getEditorByIDName(qry);
+}
+
   @Post('/sendemail')
 sendEmail(@Body() mydata){
 return this.authorService.sendEmail(mydata);
 }
-
-
 
 }
 

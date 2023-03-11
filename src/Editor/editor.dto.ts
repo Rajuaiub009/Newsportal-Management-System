@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString, Length, IsEmail } from "class-validator";
 
-export class CreateAuthor {
+export class CreateEditor {
     
     @IsNotEmpty({ message: "Enter your name here!"})
     @IsString()
@@ -16,7 +16,4 @@ export class CreateAuthor {
     @IsNotEmpty({ message: "Please enter your contact information"})
     @IsString()
     contact: string;
-    
-     filename: string;
-
 }

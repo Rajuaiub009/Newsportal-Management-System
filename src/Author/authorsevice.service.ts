@@ -47,9 +47,6 @@ insertUser(mydto:CreateAuthor):any {
     
           return this.authorRepo.delete(id);
       }
-
-      
-
     
         async signup(mydto) {
           const salt = await bcrypt.genSalt();
@@ -60,8 +57,8 @@ insertUser(mydto:CreateAuthor):any {
 
           async signin(mydto){
             console.log(mydto.password);
-        const mydata= await this.authorRepo.findOneBy({email: mydto.email});
-        const isMatch= await bcrypt.compare(mydto.password, mydata.password);
+        const getdata= await this.authorRepo.findOneBy({email: mydto.email});
+        const isMatch= await bcrypt.compare(mydto.password, getdata.password);
         if(isMatch) {
         return 1;
         }
