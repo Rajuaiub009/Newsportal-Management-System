@@ -1,4 +1,4 @@
-import {Body,Controller,Get,Post,Put,Delete,Param,ParseIntPipe,UsePipes,Query,ValidationPipe,UseInterceptors,FileTypeValidator,MaxFileSizeValidator,UploadedFile,ParseFilePipe,Session,UseGuards} from '@nestjs/common';
+  import {Body,Controller,Get,Post,Put,Delete,Param,ParseIntPipe,UsePipes,Query,ValidationPipe,UseInterceptors,FileTypeValidator,MaxFileSizeValidator,UploadedFile,ParseFilePipe,Session,UseGuards} from '@nestjs/common';
   import { CreateAuthor } from './author.dto';
   import { AuthorService } from './authorsevice.service';
   import { NewsService } from '../News/newsservice.service';
@@ -8,7 +8,8 @@ import {Body,Controller,Get,Post,Put,Delete,Param,ParseIntPipe,UsePipes,Query,Va
   import { FileInterceptor } from '@nestjs/platform-express';
   import { UnauthorizedException } from '@nestjs/common/exceptions';
   import { SessionGuard } from './session.guard';
-import { CreateNews } from '../News/news.dto';
+  import { CreateNews } from '../News/news.dto';
+import { Subject } from 'rxjs';
 
 
   @Controller('/author')
@@ -153,8 +154,11 @@ getNewsByIDName(@Query() qry: any): any {
 }
 
   @Post('/sendemail')
-sendEmail(@Body() mydata){
-return this.authorService.sendEmail(mydata);
+async sendEmail(@Body('to') to: string,
+@Body('subject') subject: string,
+@Body('text') text: string)
+{
+await this.authorService.sendEmail(to,subject,text);
 }
 
 }

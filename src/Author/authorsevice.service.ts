@@ -35,9 +35,7 @@ insertUser(mydto:CreateAuthor):any {
     authoraccount.contact = mydto.contact;
    return this.authorRepo.save(authoraccount);
       } 
-
-      
-      
+ 
       updateUser(name: any,id: string | number):any {
         console.log(name+id);
         return this.authorRepo.update(id,{name:name});
@@ -56,23 +54,23 @@ insertUser(mydto:CreateAuthor):any {
           }
 
           async signin(mydto){
-            console.log(mydto.password);
+        console.log(mydto.password);
         const getdata= await this.authorRepo.findOneBy({email: mydto.email});
         const isMatch= await bcrypt.compare(mydto.password, getdata.password);
         if(isMatch) {
-        return 1;
+        return true;
         }
         else {
-            return 0;
+            return false;
         }
         
       }
 
-      async sendEmail(mydata){
+      async sendEmail(to: string, subject: string, text: string): Promise<void>{
         return   await this.mailerService.sendMail({
-               to: mydata.email,
-               subject: mydata.subject,
-               text: mydata.text, 
+               to: to,
+               subject: subject,
+               text: text, 
              });
        
        }
